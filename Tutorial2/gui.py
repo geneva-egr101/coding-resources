@@ -1,5 +1,4 @@
 import threading
-import time
 from PyQt5 import uic
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QDialog
@@ -25,20 +24,24 @@ def install_thread_excepthook():
     threading.Thread.run = run
 
 
-install_thread_excepthook()
-
-
 class MainWindow(QDialog):
-    def __init__(self, filename, custom_closeEvent=None):
+    def __init__(self, app, filename, custom_closeEvent=None):
         super(MainWindow, self).__init__()
         uic.loadUi(filename, self)
 
+        self._app = app
         self.filename = filename
         self.custom_closeEvent = custom_closeEvent if custom_closeEvent else lambda: None
         self.closed = False
 
+    
     def connect_event(self, event, target, args=[]):
         event.connect(lambda: target(*args), Qt.DirectConnection)
+
+    
+    def update(self):
+        self._app.processEvents()
+
 
     def closeEvent(self, event):
         self.custom_closeEvent()
@@ -46,19 +49,10 @@ class MainWindow(QDialog):
         event.accept()
 
 
-window = None
-
-
-def run(*args):
-    global window
-    app = QApplication([])
-    window = MainWindow(*args)
-    app.exec_()
-
-
 def create(*args):
-    global window
-    threading.Thread(target=run, args=args).start()
-    while not window:
-        time.sleep(0.001)
+    app = QApplication([])
+    window = MainWindow(app, *args)
     return window
+
+
+install_thread_excepthook()

@@ -61,4 +61,5 @@ while not closed:
         GPIO.output(motor_pin_1, False)
         GPIO.output(motor_pin_2, False)
     previous_state = state
+    window.update()
     time.sleep(0.01)

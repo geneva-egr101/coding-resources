@@ -32,4 +32,5 @@ while not closed:  # Stop looping when window is closed
         GPIO.output(motor_pin_1, False)
         GPIO.output(motor_pin_2, toggled)
     previous_state = state
+    window.update()
     time.sleep(0.01)

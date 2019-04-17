@@ -18,13 +18,16 @@ window = gui.create("motor_control1.ui")  # Load custom GUI from file
 window.show()  # Show custom GUI as an application
 
 toggled = False
-#...
 previous_state = False
 while True:
+    #...
     state = GPIO.input(button_pin)
     if (previous_state == False and state == True):
         toggled = not toggled
         GPIO.output(motor_pin_1, False)
         GPIO.output(motor_pin_2, toggled)
+    #...
     previous_state = state
+    window.update()  # Refresh widgets and process events
     time.sleep(0.01)
+#...
