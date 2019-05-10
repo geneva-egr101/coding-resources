@@ -5,10 +5,12 @@
 DIR="$(dirname "$(readlink -f "$0")")"
 
 # Ask for confirmation
-echo "Are you sure you want to reset this Pi? Any files you created will be deleted."
-read -p "Type \"yes\" to continue: " response
-if [ "${response,,}" != "yes" ]; then
-  exec $SHELL
+if [ "$1" != "-y" ]; then
+  echo "Are you sure you want to reset this Pi? Any files you created will be deleted."
+  read -p "Type \"yes\" to continue: " response
+  if [ "${response,,}" != "yes" ]; then
+    exec $SHELL
+  fi
 fi
 
 # Remove all user-created files
